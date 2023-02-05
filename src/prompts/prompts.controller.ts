@@ -1,15 +1,20 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { CreatePromptDto } from './dtos/create-prompt.dto';
 
 @Controller('/prompts')
 export class PromptsController {
-    @Get('')
+    @Get()
     listPrompts(){
         return 'all good'
     }
 
-    @Post('/create')
-    createPrompt(){}
+    @Post()
+    createPrompt(@Body() body: CreatePromptDto){
+        console.log('on post', body)
+    }
 
     @Get('/:id')
-    getPrompt(){}
+    getPrompt(@Param('id') id: string){
+        console.log('on get id', id)
+    }
 }
