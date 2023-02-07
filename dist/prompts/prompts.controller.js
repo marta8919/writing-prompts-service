@@ -15,15 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PromptsController = void 0;
 const common_1 = require("@nestjs/common");
 const create_prompt_dto_1 = require("./dtos/create-prompt.dto");
+const prompts_services_1 = require("./prompts.services");
 let PromptsController = class PromptsController {
+    constructor(promptService) {
+        this.promptService = promptService;
+    }
     listPrompts() {
-        return 'all good';
+        return this.promptService.findAll();
     }
     createPrompt(body) {
-        console.log('on post', body);
+        return this.promptService.create(body.content);
     }
-    getPrompt(id) {
-        console.log('on get id', id);
+    async getPrompt(id) {
+        const prompt = await this.promptService.findOne(id);
+        if (!prompt) {
+            throw new common_1.NotFoundException('message not found');
+        }
+        return prompt;
     }
 };
 __decorate([
@@ -44,10 +52,11 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], PromptsController.prototype, "getPrompt", null);
 PromptsController = __decorate([
-    (0, common_1.Controller)('/prompts')
+    (0, common_1.Controller)('/prompts'),
+    __metadata("design:paramtypes", [prompts_services_1.PromptsService])
 ], PromptsController);
 exports.PromptsController = PromptsController;
 //# sourceMappingURL=prompts.controller.js.map

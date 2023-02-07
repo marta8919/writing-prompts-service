@@ -1,20 +1,29 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException } from '@nestjs/common';
 import { CreatePromptDto } from './dtos/create-prompt.dto';
+import { PromptsService } from './prompts.services';
 
 @Controller('/prompts')
 export class PromptsController {
+
+    constructor(public promptService: PromptsService){}
+
     @Get()
     listPrompts(){
-        return 'all good'
+        return this.promptService.findAll()
     }
 
     @Post()
     createPrompt(@Body() body: CreatePromptDto){
-        console.log('on post', body)
+        return this.promptService.create(body.content)
+
     }
 
     @Get('/:id')
-    getPrompt(@Param('id') id: string){
-        console.log('on get id', id)
+    async getPrompt(@Param('id') id: string){
+        const prompt =  await this.promptService.findOne(id)
+        if (!prompt){ 
+            throw new NotFoundException('message not found')
+        } 
+        return prompt;
     }
 }

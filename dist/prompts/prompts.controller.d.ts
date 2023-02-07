@@ -1,6 +1,9 @@
 import { CreatePromptDto } from './dtos/create-prompt.dto';
+import { PromptsService } from './prompts.services';
 export declare class PromptsController {
-    listPrompts(): string;
-    createPrompt(body: CreatePromptDto): void;
-    getPrompt(id: string): void;
+    promptService: PromptsService;
+    constructor(promptService: PromptsService);
+    listPrompts(): Promise<any>;
+    createPrompt(body: CreatePromptDto): Promise<void>;
+    getPrompt(id: string): Promise<any>;
 }

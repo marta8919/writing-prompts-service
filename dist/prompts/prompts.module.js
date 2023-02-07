@@ -9,11 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PromptsModule = void 0;
 const common_1 = require("@nestjs/common");
 const prompts_controller_1 = require("./prompts.controller");
+const prompts_services_1 = require("./prompts.services");
+const prompts_repository_1 = require("./prompts.repository");
 let PromptsModule = class PromptsModule {
 };
 PromptsModule = __decorate([
     (0, common_1.Module)({
-        controllers: [prompts_controller_1.PromptsController]
+        controllers: [prompts_controller_1.PromptsController],
+        providers: [prompts_services_1.PromptsService, prompts_repository_1.PromptsRepository]
     })
 ], PromptsModule);
 exports.PromptsModule = PromptsModule;
