@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import {PromptsModule} from './prompts/prompts.module'
 import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
 async function bootstrap() {
-  const app = await NestFactory.create(PromptsModule);
+  const app = await NestFactory.create(AppModule);
   // apply pipe to all income requests
   // if no validations rules added to a particular handler the validation pipe won't run on it
   app.useGlobalPipes(
