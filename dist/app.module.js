@@ -13,11 +13,21 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const prompts_module_1 = require("./prompts/prompts.module");
 const typeorm_1 = require("@nestjs/typeorm");
+const user_entity_1 = require("./users/user.entity");
+const prompts_entity_1 = require("./prompts/prompts.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forRoot({ type: 'sqlite', database: 'db.sqlite', entities: [], synchronize: true }), users_module_1.UsersModule, prompts_module_1.PromptsModule],
+        imports: [typeorm_1.TypeOrmModule.forRoot({
+                type: 'sqlite',
+                database: 'db.sqlite',
+                entities: [user_entity_1.UserEntity, prompts_entity_1.PromptsEntity],
+                synchronize: true
+            }),
+            users_module_1.UsersModule,
+            prompts_module_1.PromptsModule
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

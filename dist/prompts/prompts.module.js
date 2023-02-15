@@ -11,10 +11,13 @@ const common_1 = require("@nestjs/common");
 const prompts_controller_1 = require("./prompts.controller");
 const prompts_services_1 = require("./prompts.services");
 const prompts_repository_1 = require("./prompts.repository");
+const typeorm_1 = require("@nestjs/typeorm");
+const prompts_entity_1 = require("./prompts.entity");
 let PromptsModule = class PromptsModule {
 };
 PromptsModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([prompts_entity_1.PromptsEntity])],
         controllers: [prompts_controller_1.PromptsController],
         providers: [prompts_services_1.PromptsService, prompts_repository_1.PromptsRepository]
     })
