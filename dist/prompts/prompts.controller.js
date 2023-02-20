@@ -29,7 +29,7 @@ let PromptsController = class PromptsController {
     async getPrompt(id) {
         const prompt = await this.promptService.findOne(id);
         if (!prompt) {
-            throw new common_1.NotFoundException('message not found');
+            throw new common_1.NotFoundException('Prompt not found');
         }
         return prompt;
     }

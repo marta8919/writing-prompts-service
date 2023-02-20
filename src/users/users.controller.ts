@@ -2,8 +2,12 @@ import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundExcep
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from './dtos/user.dto';
 
 @Controller('auth')
+@Serialize(UserDto)
+// decorator applied to all routes
 export class UsersController {
     constructor(private userService: UsersService){}
     @Post('/signup')
@@ -11,7 +15,6 @@ export class UsersController {
         return this.userService.create(body.email, body.password)
     }
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Get('/:id')
     async findUser(@Param('id') id: string){
         const user = await this.userService.findOne(parseInt(id))

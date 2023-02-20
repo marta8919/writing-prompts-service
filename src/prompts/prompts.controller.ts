@@ -22,7 +22,7 @@ export class PromptsController {
     async getPrompt(@Param('id') id: string){
         const prompt =  await this.promptService.findOne(id)
         if (!prompt){ 
-            throw new NotFoundException('message not found')
+            throw new NotFoundException('Prompt not found')
         } 
         return prompt;
     }
