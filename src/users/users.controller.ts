@@ -4,15 +4,21 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 @Serialize(UserDto)
 // decorator applied to all routes
 export class UsersController {
-    constructor(private userService: UsersService){}
+    constructor(private userService: UsersService, private authService: AuthService){}
     @Post('/signup')
     createUser(@Body() body: CreateUserDto){
-        return this.userService.create(body.email, body.password)
+        return this.authService.signup(body.email, body.password)
+    }
+
+    @Post('/signin')
+    signin(@Body() body: CreateUserDto){
+        return this.authService.signin(body.email, body.password)
     }
 
     @Get('/:id')
@@ -29,7 +35,7 @@ export class UsersController {
     findAllUser(@Query('email') email: string){
         return this.userService.find(email)
     }
-
+ 
     @Delete('/:id')
     removeUser(@Param('id') id: string){
         return this.userService.remove(parseInt(id))
