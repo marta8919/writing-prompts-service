@@ -27,6 +27,8 @@ let UsersService = class UsersService {
         return this.repo.save(user);
     }
     findOne(id) {
+        if (!id)
+            throw new common_1.NotFoundException('No user logged in');
         return this.repo.findOneBy({ id: id });
     }
     find(email) {
@@ -34,17 +36,15 @@ let UsersService = class UsersService {
     }
     async update(id, attrs) {
         const user = await this.findOne(id);
-        if (!user) {
+        if (!user)
             throw new common_1.NotFoundException('User not found');
-        }
         Object.assign(user, attrs);
         this.repo.save(user);
     }
     async remove(id) {
         const user = await this.findOne(id);
-        if (!user) {
+        if (!user)
             throw new common_1.NotFoundException('User not found');
-        }
         this.repo.remove(user);
     }
 };

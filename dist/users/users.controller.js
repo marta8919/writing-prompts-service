@@ -20,16 +20,27 @@ const users_service_1 = require("./users.service");
 const serialize_interceptor_1 = require("../interceptors/serialize.interceptor");
 const user_dto_1 = require("./dtos/user.dto");
 const auth_service_1 = require("./auth.service");
+const currentuser_decorator_1 = require("./decorators/currentuser.decorator");
 let UsersController = class UsersController {
     constructor(userService, authService) {
         this.userService = userService;
         this.authService = authService;
     }
-    createUser(body) {
-        return this.authService.signup(body.email, body.password);
+    async createUser(body, session) {
+        const user = await this.authService.signup(body.email, body.password);
+        session.userId = user.id;
+        return user;
     }
-    signin(body) {
-        return this.authService.signin(body.email, body.password);
+    whoAmI(user) {
+        return user;
+    }
+    signout(session) {
+        session.userId = null;
+    }
+    async signin(body, session) {
+        const user = await this.authService.signin(body.email, body.password);
+        session.userId = user.id;
+        return user;
     }
     async findUser(id) {
         const user = await this.userService.findOne(parseInt(id));
@@ -51,16 +62,32 @@ let UsersController = class UsersController {
 __decorate([
     (0, common_1.Post)('/signup'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Session)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Object]),
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
+__decorate([
+    (0, common_1.Get)('/whoami'),
+    __param(0, (0, currentuser_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "whoAmI", null);
+__decorate([
+    (0, common_1.Post)('/signout'),
+    __param(0, (0, common_1.Session)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "signout", null);
 __decorate([
     (0, common_1.Post)('/signin'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Session)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Object]),
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "signin", null);
 __decorate([
     (0, common_1.Get)('/:id'),

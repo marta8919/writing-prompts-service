@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity as User} from './user.entity';
@@ -16,7 +16,9 @@ export class UsersService {
     }
 
     findOne(id: number){
-        return this.repo.findOneBy({id: id})
+        if(!id) throw new NotFoundException('No user logged in')
+
+        return this.repo.findOneBy({id: id})       
     }
 
     find(email: string){
@@ -26,9 +28,8 @@ export class UsersService {
     async update(id: number, attrs: Partial<User>){
         // first need to find user using the method we defined before
         const user = await this.findOne(id)
-        if(!user){
-            throw new NotFoundException('User not found')
-        }
+        if(!user) throw new NotFoundException('User not found')
+        
         // update user instance
         Object.assign(user, attrs);
         // save
@@ -37,9 +38,8 @@ export class UsersService {
 
     async remove(id: number){
         const user = await this.findOne(id)
-        if(!user){
-            throw new NotFoundException('User not found')
-        }
+        if(!user) throw new NotFoundException('User not found')
+        
         // remove works with entity, delete with id but won't run hooks
         this.repo.remove(user)
     }

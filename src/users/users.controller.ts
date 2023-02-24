@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundException, UseInterceptors, ClassSerializerInterceptor, Session } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/currentuser.decorator';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -12,13 +13,33 @@ import { AuthService } from './auth.service';
 export class UsersController {
     constructor(private userService: UsersService, private authService: AuthService){}
     @Post('/signup')
-    createUser(@Body() body: CreateUserDto){
-        return this.authService.signup(body.email, body.password)
+    async createUser(@Body() body: CreateUserDto, @Session() session: any){
+        const user = await this.authService.signup(body.email, body.password)
+        // set user id in a cookie
+        session.userId = user.id
+        return user;
+    }
+
+    // @Get('/whoami')
+    // whoAmI(@Session() session: any){
+    //     return this.userService.findOne(session.userId)
+    // }
+
+    @Get('/whoami')
+    whoAmI(@CurrentUser() user: string){
+        return user
+    }
+
+    @Post('/signout')
+    signout(@Session() session: any){
+        session.userId = null;
     }
 
     @Post('/signin')
-    signin(@Body() body: CreateUserDto){
-        return this.authService.signin(body.email, body.password)
+    async signin(@Body() body: CreateUserDto,  @Session() session: any){
+        const user = await this.authService.signin(body.email, body.password)
+        session.userId = user.id
+        return user;
     }
 
     @Get('/:id')
