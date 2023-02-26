@@ -1,14 +1,19 @@
-import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundException, UseInterceptors, ClassSerializerInterceptor, Session } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundException, UseGuards, Session } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-import { CurrentUser } from './decorators/currentuser.decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { UserEntity } from './user.entity'
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
+// this is locally applied to this controller, we can apply it globally in the users.module
+// @UseInterceptors(CurrentUserInterceptor)
 // decorator applied to all routes
 export class UsersController {
     constructor(private userService: UsersService, private authService: AuthService){}
@@ -25,8 +30,12 @@ export class UsersController {
     //     return this.userService.findOne(session.userId)
     // }
 
+    // current user is the decorator, and it works here without extra code because of the interceptor
+    // we created, that returns the user object
+    // we need the interceptor because we cannot provide the decorator with DI
+    @UseGuards(AuthGuard)
     @Get('/whoami')
-    whoAmI(@CurrentUser() user: string){
+    whoAmI(@CurrentUser() user: UserEntity){
         return user
     }
 
