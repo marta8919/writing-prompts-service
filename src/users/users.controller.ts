@@ -2,13 +2,14 @@ import { Body, Controller, Post, Get, Patch, Param, Query, Delete, NotFoundExcep
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { UserEntity } from './user.entity'
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
+
+//! IMPORTANT, the importst from src/... instead of ../../ might break the tests
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -33,8 +34,8 @@ export class UsersController {
     // current user is the decorator, and it works here without extra code because of the interceptor
     // we created, that returns the user object
     // we need the interceptor because we cannot provide the decorator with DI
-    @UseGuards(AuthGuard)
     @Get('/whoami')
+    @UseGuards(AuthGuard)
     whoAmI(@CurrentUser() user: UserEntity){
         return user
     }
