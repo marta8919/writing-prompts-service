@@ -4,4 +4,8 @@ import { IsString } from 'class-validator'
 export class CreatePromptDto {
     @IsString()
     content: string;
+    @IsString()
+    category: string;
+    @IsString()
+    author_id: string;
 }

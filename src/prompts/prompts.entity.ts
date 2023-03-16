@@ -8,4 +8,6 @@ export class PromptsEntity {
     prompt: string;
     @Column()
     category: string;
+    @Column()
+    author_id: string;
 }

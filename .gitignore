@@ -1,3 +1,6 @@
 git
 node_modules
 requests.http
+.env.development
+.env.test
+.vscode
