@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
+import { UserEntity } from '../users/user.entity';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
 
 @Entity()
 export class PromptsEntity {
@@ -8,6 +9,10 @@ export class PromptsEntity {
     prompt: string;
     @Column()
     category: string;
+
+    @ManyToOne(()=> UserEntity, (user)=> user.prompts)
+    user: UserEntity;
+
     @Column()
-    author_id: string;
+    userId: number;
 }

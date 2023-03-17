@@ -30,11 +30,12 @@ let PromptsService = class PromptsService {
             throw new common_1.NotFoundException('No prompt on this category');
         return this.repo.find({ where: { category } });
     }
-    create(prompt, category, author_id) {
-        const prompt_created = this.repo.create({ prompt, category, author_id });
+    create(promptdto, user) {
+        const prompt_created = this.repo.create(promptdto);
+        prompt_created.user = user;
         return this.repo.save(prompt_created);
     }
-    findOne(id) {
+    async findOne(id) {
         if (!id)
             throw new common_1.NotFoundException('Prompt not found');
         return this.repo.findOne({ where: { id: id } });
@@ -42,20 +43,30 @@ let PromptsService = class PromptsService {
     findByAuthor(id) {
         if (!id)
             throw new common_1.NotFoundException('Author not found');
-        return this.repo.findOne({ where: { author_id: id } });
+        return this.repo.find({ where: { user: { id: id } } });
     }
-    async remove(id) {
+    async remove(id, userId) {
         const prompt = await this.findOne(id);
-        if (!id)
+        if (!prompt)
             throw new common_1.NotFoundException('No prompt found');
-        this.repo.remove(prompt);
+        if (prompt.userId === userId) {
+            this.repo.remove(prompt);
+        }
+        else {
+            throw new common_1.UnauthorizedException('Not authorized');
+        }
     }
-    async update(id, attrs) {
+    async update(id, attrs, userId) {
         const prompt = await this.findOne(parseInt(id));
         if (!prompt)
             throw new common_1.NotFoundException('No prompt found');
-        Object.assign(prompt, attrs);
-        this.repo.save(prompt);
+        if (prompt.userId === userId) {
+            Object.assign(prompt, attrs);
+            this.repo.save(prompt);
+        }
+        else {
+            throw new common_1.UnauthorizedException('Sorry not authorized to change this prompt');
+        }
     }
 };
 PromptsService = __decorate([

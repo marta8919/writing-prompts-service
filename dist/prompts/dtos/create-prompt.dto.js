@@ -16,14 +16,10 @@ class CreatePromptDto {
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreatePromptDto.prototype, "content", void 0);
+], CreatePromptDto.prototype, "prompt", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreatePromptDto.prototype, "category", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreatePromptDto.prototype, "author_id", void 0);
 exports.CreatePromptDto = CreatePromptDto;
 //# sourceMappingURL=create-prompt.dto.js.map

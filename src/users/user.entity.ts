@@ -1,5 +1,5 @@
-import { AfterInsert, AfterRemove, AfterUpdate ,Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
-// import { Exclude } from 'class-transformer';
+import { PromptsEntity } from '../prompts/prompts.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 
 @Entity()
 export class UserEntity {
@@ -8,22 +8,10 @@ export class UserEntity {
     @Column()
     email: string;
     @Column()
-    // @Exclude()
     password: string;
+    @Column({default: true})
+    admin: boolean;
 
-    @AfterInsert()
-    logInsert(){
-        console.log('Inserted User with id', this.id)
-    }
-
-    @AfterUpdate()
-    logUpdate(){
-        console.log('Updated user with id ', this.id)
-    }
-
-    @AfterRemove()
-    logRemove(){
-        console.log('Removing user with id ', this.id)
-    }
-    
+    @OneToMany(()=> PromptsEntity, (prompt) => prompt.user)
+    prompts: PromptsEntity[];
 }

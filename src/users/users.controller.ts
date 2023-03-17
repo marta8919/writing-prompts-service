@@ -13,27 +13,14 @@ import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
-// this is locally applied to this controller, we can apply it globally in the users.module
-// @UseInterceptors(CurrentUserInterceptor)
-// decorator applied to all routes
 export class UsersController {
     constructor(private userService: UsersService, private authService: AuthService){}
     @Post('/signup')
     async createUser(@Body() body: CreateUserDto, @Session() session: any){
         const user = await this.authService.signup(body.email, body.password)
-        // set user id in a cookie
         session.userId = user.id
         return user;
     }
-
-    // @Get('/whoami')
-    // whoAmI(@Session() session: any){
-    //     return this.userService.findOne(session.userId)
-    // }
-
-    // current user is the decorator, and it works here without extra code because of the interceptor
-    // we created, that returns the user object
-    // we need the interceptor because we cannot provide the decorator with DI
     @Get('/whoami')
     @UseGuards(AuthGuard)
     whoAmI(@CurrentUser() user: UserEntity){

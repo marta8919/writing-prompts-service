@@ -1,7 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PromptsEntity } from "./prompts.entity";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from "typeorm";
+import { CreatePromptDto } from "./dtos/create-prompt.dto";
+import { UserEntity } from "src/users/user.entity";
 
 @Injectable()
 export class PromptsService{
@@ -12,39 +14,46 @@ export class PromptsService{
     findAll(){
         return this.repo.find()
     }
-xw
+
     findByCategory(category: string){
         if(!category) throw new NotFoundException('No prompt on this category')
         return this.repo.find({where: {category}});
     }
 
-    create(prompt: string, category: string, author_id: string){
-        const prompt_created = this.repo.create({prompt, category, author_id})
+    create(promptdto: CreatePromptDto, user: UserEntity){
+        const prompt_created = this.repo.create(promptdto)
+        prompt_created.user = user;
         return this.repo.save(prompt_created)
     }
 
-    findOne(id: number){
+    async findOne(id: number){
         if(!id) throw new NotFoundException('Prompt not found')
         return this.repo.findOne({where: {id: id}});
     }
 
-    findByAuthor(id: string){
+    findByAuthor(id: number){
         if(!id) throw new NotFoundException('Author not found')
-        return this.repo.findOne({where: {author_id: id}});
+        return this.repo.find({where: {user: {id: id}}});
     }
 
-    async remove(id: number){
+    async remove(id: number, userId: number){
         const prompt = await this.findOne(id)
-        if(!id) throw new NotFoundException('No prompt found')
-
-        this.repo.remove(prompt)
+        if(!prompt) throw new NotFoundException('No prompt found')
+        if(prompt.userId === userId){
+            this.repo.remove(prompt)
+        } else {
+            throw new UnauthorizedException('Not authorized')
+        }
     }
 
-    async update(id: string, attrs: Partial<PromptsEntity>){
-        // if logged in ID is the same as author_id proceed
+    async update(id: string, attrs: Partial<PromptsEntity>, userId: number){
         const prompt = await this.findOne(parseInt(id))
         if(!prompt) throw new NotFoundException('No prompt found')
-        Object.assign(prompt, attrs);
-        this.repo.save(prompt)
+        if(prompt.userId === userId){
+            Object.assign(prompt, attrs);
+            this.repo.save(prompt)
+        } else {
+            throw new UnauthorizedException('Sorry not authorized to change this prompt')
+        }
     }
 }

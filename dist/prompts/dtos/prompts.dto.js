@@ -9,33 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserEntity = void 0;
-const prompts_entity_1 = require("../prompts/prompts.entity");
-const typeorm_1 = require("typeorm");
-let UserEntity = class UserEntity {
-};
+exports.PromptsDto = void 0;
+const class_transformer_1 = require("class-transformer");
+class PromptsDto {
+}
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, class_transformer_1.Expose)(),
+    __metadata("design:type", String)
+], PromptsDto.prototype, "id", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    __metadata("design:type", String)
+], PromptsDto.prototype, "prompt", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    __metadata("design:type", String)
+], PromptsDto.prototype, "category", void 0);
+__decorate([
+    (0, class_transformer_1.Transform)(({ obj }) => { console.log('object', obj), obj.user.id; }),
+    (0, class_transformer_1.Expose)(),
     __metadata("design:type", Number)
-], UserEntity.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], UserEntity.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], UserEntity.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: true }),
-    __metadata("design:type", Boolean)
-], UserEntity.prototype, "admin", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => prompts_entity_1.PromptsEntity, (prompt) => prompt.user),
-    __metadata("design:type", Array)
-], UserEntity.prototype, "prompts", void 0);
-UserEntity = __decorate([
-    (0, typeorm_1.Entity)()
-], UserEntity);
-exports.UserEntity = UserEntity;
-//# sourceMappingURL=user.entity.js.map
+], PromptsDto.prototype, "userId", void 0);
+exports.PromptsDto = PromptsDto;
+//# sourceMappingURL=prompts.dto.js.map

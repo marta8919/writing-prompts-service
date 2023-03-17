@@ -17,6 +17,11 @@ const common_1 = require("@nestjs/common");
 const create_prompt_dto_1 = require("./dtos/create-prompt.dto");
 const update_prompt_dto_1 = require("./dtos/update-prompt.dto");
 const prompts_services_1 = require("./prompts.services");
+const auth_guard_1 = require("../guards/auth.guard");
+const current_user_decorator_1 = require("../users/decorators/current-user.decorator");
+const user_entity_1 = require("../users/user.entity");
+const serialize_interceptor_1 = require("../interceptors/serialize.interceptor");
+const prompts_dto_1 = require("./dtos/prompts.dto");
 let PromptsController = class PromptsController {
     constructor(promptService) {
         this.promptService = promptService;
@@ -24,18 +29,18 @@ let PromptsController = class PromptsController {
     findAll() {
         return this.promptService.findAll();
     }
-    createPrompt(body) {
-        return this.promptService.create(body.content, body.category, body.author_id);
-    }
-    async listCategoryPrompts(category) {
-        const prompt = await this.promptService.findByCategory(category);
+    async getPrompt(id) {
+        const prompt = await this.promptService.findOne(id);
         if (!prompt) {
             throw new common_1.NotFoundException('Prompt not found');
         }
         return prompt;
     }
-    async getPrompt(id) {
-        const prompt = await this.promptService.findOne(id);
+    createPrompt(body, user) {
+        return this.promptService.create(body, user);
+    }
+    async listCategoryPrompts(category) {
+        const prompt = await this.promptService.findByCategory(category);
         if (!prompt) {
             throw new common_1.NotFoundException('Prompt not found');
         }
@@ -48,24 +53,34 @@ let PromptsController = class PromptsController {
         }
         return prompt;
     }
-    removePrompt(id) {
-        return this.promptService.remove(parseInt(id));
+    removePrompt(id, user) {
+        return this.promptService.remove(id, user.id);
     }
-    updatePrompt(id, body) {
-        return this.promptService.update(id, body);
+    updatePrompt(id, body, user) {
+        return this.promptService.update(id, body, user.id);
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/all'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], PromptsController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_prompt_dto_1.CreatePromptDto]),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], PromptsController.prototype, "getPrompt", null);
+__decorate([
+    (0, common_1.Post)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, serialize_interceptor_1.Serialize)(prompts_dto_1.PromptsDto),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_prompt_dto_1.CreatePromptDto, user_entity_1.UserEntity]),
     __metadata("design:returntype", void 0)
 ], PromptsController.prototype, "createPrompt", null);
 __decorate([
@@ -76,32 +91,29 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PromptsController.prototype, "listCategoryPrompts", null);
 __decorate([
-    (0, common_1.Get)('/:id'),
+    (0, common_1.Get)('/author/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], PromptsController.prototype, "getPrompt", null);
-__decorate([
-    (0, common_1.Get)('/author/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
 ], PromptsController.prototype, "getByAuthor", null);
 __decorate([
     (0, common_1.Delete)('/:id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number, user_entity_1.UserEntity]),
     __metadata("design:returntype", void 0)
 ], PromptsController.prototype, "removePrompt", null);
 __decorate([
     (0, common_1.Patch)('/:id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_prompt_dto_1.UpdatePromptDto]),
+    __metadata("design:paramtypes", [String, update_prompt_dto_1.UpdatePromptDto, user_entity_1.UserEntity]),
     __metadata("design:returntype", void 0)
 ], PromptsController.prototype, "updatePrompt", null);
 PromptsController = __decorate([

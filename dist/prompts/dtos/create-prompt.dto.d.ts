@@ -1,5 +1,4 @@
 export declare class CreatePromptDto {
-    content: string;
+    prompt: string;
     category: string;
-    author_id: string;
 }
