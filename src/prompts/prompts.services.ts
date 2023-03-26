@@ -16,7 +16,6 @@ export class PromptsService{
     }
 
     findByCategory(category: string){
-        if(!category) throw new NotFoundException('No prompt on this category')
         return this.repo.find({where: {category}});
     }
 
@@ -27,19 +26,17 @@ export class PromptsService{
     }
 
     async findOne(id: number){
-        if(!id) throw new NotFoundException('Prompt not found')
         return this.repo.findOne({where: {id: id}});
     }
 
     findByAuthor(id: number){
-        if(!id) throw new NotFoundException('Author not found')
         return this.repo.find({where: {user: {id: id}}});
     }
 
     async remove(id: number, userId: number){
         const prompt = await this.findOne(id)
         if(!prompt) throw new NotFoundException('No prompt found')
-        if(prompt.userId === userId){
+        if(prompt.user.id === userId){
             this.repo.remove(prompt)
         } else {
             throw new UnauthorizedException('Not authorized')
@@ -49,7 +46,7 @@ export class PromptsService{
     async update(id: string, attrs: Partial<PromptsEntity>, userId: number){
         const prompt = await this.findOne(parseInt(id))
         if(!prompt) throw new NotFoundException('No prompt found')
-        if(prompt.userId === userId){
+        if(prompt.user.id === userId){
             Object.assign(prompt, attrs);
             this.repo.save(prompt)
         } else {

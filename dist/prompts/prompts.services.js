@@ -26,8 +26,6 @@ let PromptsService = class PromptsService {
         return this.repo.find();
     }
     findByCategory(category) {
-        if (!category)
-            throw new common_1.NotFoundException('No prompt on this category');
         return this.repo.find({ where: { category } });
     }
     create(promptdto, user) {
@@ -36,20 +34,16 @@ let PromptsService = class PromptsService {
         return this.repo.save(prompt_created);
     }
     async findOne(id) {
-        if (!id)
-            throw new common_1.NotFoundException('Prompt not found');
         return this.repo.findOne({ where: { id: id } });
     }
     findByAuthor(id) {
-        if (!id)
-            throw new common_1.NotFoundException('Author not found');
         return this.repo.find({ where: { user: { id: id } } });
     }
     async remove(id, userId) {
         const prompt = await this.findOne(id);
         if (!prompt)
             throw new common_1.NotFoundException('No prompt found');
-        if (prompt.userId === userId) {
+        if (prompt.user.id === userId) {
             this.repo.remove(prompt);
         }
         else {
@@ -60,7 +54,7 @@ let PromptsService = class PromptsService {
         const prompt = await this.findOne(parseInt(id));
         if (!prompt)
             throw new common_1.NotFoundException('No prompt found');
-        if (prompt.userId === userId) {
+        if (prompt.user.id === userId) {
             Object.assign(prompt, attrs);
             this.repo.save(prompt);
         }

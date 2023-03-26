@@ -12,7 +12,4 @@ export class PromptsEntity {
 
     @ManyToOne(()=> UserEntity, (user)=> user.prompts)
     user: UserEntity;
-
-    @Column()
-    userId: number;
 }

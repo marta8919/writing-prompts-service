@@ -9,8 +9,6 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { UserEntity } from './user.entity'
 import { AuthGuard } from '../guards/auth.guard';
 
-//! IMPORTANT, the importst from src/... instead of ../../ might break the tests
-
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
@@ -28,7 +26,7 @@ export class UsersController {
     }
 
     @Post('/signout')
-    signout(@Session() session: any){
+    signout(@Session() session: any){ 
         session.userId = null;
     }
 

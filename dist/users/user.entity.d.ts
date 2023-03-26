@@ -1,4 +1,4 @@
-import { PromptsEntity } from 'src/prompts/prompts.entity';
+import { PromptsEntity } from '../prompts/prompts.entity';
 export declare class UserEntity {
     id: number;
     email: string;

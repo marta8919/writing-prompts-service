@@ -9,29 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PromptsEntity = void 0;
-const user_entity_1 = require("../users/user.entity");
-const typeorm_1 = require("typeorm");
-let PromptsEntity = class PromptsEntity {
-};
+exports.GetPromptsDto = void 0;
+const class_validator_1 = require("class-validator");
+class GetPromptsDto {
+}
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], PromptsEntity.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], PromptsEntity.prototype, "prompt", void 0);
+], GetPromptsDto.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], PromptsEntity.prototype, "category", void 0);
+], GetPromptsDto.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.UserEntity, (user) => user.prompts),
-    __metadata("design:type", user_entity_1.UserEntity)
-], PromptsEntity.prototype, "user", void 0);
-PromptsEntity = __decorate([
-    (0, typeorm_1.Entity)()
-], PromptsEntity);
-exports.PromptsEntity = PromptsEntity;
-//# sourceMappingURL=prompts.entity.js.map
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], GetPromptsDto.prototype, "author", void 0);
+exports.GetPromptsDto = GetPromptsDto;
+//# sourceMappingURL=get-prompts.dto.js.map

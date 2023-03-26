@@ -22,6 +22,7 @@ const current_user_decorator_1 = require("../users/decorators/current-user.decor
 const user_entity_1 = require("../users/user.entity");
 const serialize_interceptor_1 = require("../interceptors/serialize.interceptor");
 const prompts_dto_1 = require("./dtos/prompts.dto");
+const get_prompts_dto_1 = require("./dtos/get-prompts.dto");
 let PromptsController = class PromptsController {
     constructor(promptService) {
         this.promptService = promptService;
@@ -29,29 +30,24 @@ let PromptsController = class PromptsController {
     findAll() {
         return this.promptService.findAll();
     }
-    async getPrompt(id) {
-        const prompt = await this.promptService.findOne(id);
+    async getPrompt(query) {
+        let prompt;
+        if (query.id) {
+            prompt = await this.promptService.findOne(+query.id);
+        }
+        if (query.author) {
+            prompt = await this.promptService.findByAuthor(+query.author);
+        }
+        if (query.category) {
+            prompt = await this.promptService.findByCategory(query.category);
+        }
         if (!prompt) {
-            throw new common_1.NotFoundException('Prompt not found');
+            throw new common_1.NotFoundException('No prompts found');
         }
         return prompt;
     }
     createPrompt(body, user) {
         return this.promptService.create(body, user);
-    }
-    async listCategoryPrompts(category) {
-        const prompt = await this.promptService.findByCategory(category);
-        if (!prompt) {
-            throw new common_1.NotFoundException('Prompt not found');
-        }
-        return prompt;
-    }
-    async getByAuthor(id) {
-        const prompt = await this.promptService.findByAuthor(id);
-        if (!prompt) {
-            throw new common_1.NotFoundException('No prompts found');
-        }
-        return prompt;
     }
     removePrompt(id, user) {
         return this.promptService.remove(id, user.id);
@@ -68,9 +64,9 @@ __decorate([
 ], PromptsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('id')),
+    __param(0, (0, common_1.Query)('')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [get_prompts_dto_1.GetPromptsDto]),
     __metadata("design:returntype", Promise)
 ], PromptsController.prototype, "getPrompt", null);
 __decorate([
@@ -83,20 +79,6 @@ __decorate([
     __metadata("design:paramtypes", [create_prompt_dto_1.CreatePromptDto, user_entity_1.UserEntity]),
     __metadata("design:returntype", void 0)
 ], PromptsController.prototype, "createPrompt", null);
-__decorate([
-    (0, common_1.Get)('/category/:category'),
-    __param(0, (0, common_1.Param)('category')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], PromptsController.prototype, "listCategoryPrompts", null);
-__decorate([
-    (0, common_1.Get)('/author/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], PromptsController.prototype, "getByAuthor", null);
 __decorate([
     (0, common_1.Delete)('/:id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

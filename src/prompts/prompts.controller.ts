@@ -7,6 +7,8 @@ import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { UserEntity } from '../users/user.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { PromptsDto } from './dtos/prompts.dto';
+import { GetPromptsDto } from './dtos/get-prompts.dto';
+import { PromptsEntity } from './prompts.entity';
 
 @Controller('/prompts')
 export class PromptsController {
@@ -19,12 +21,26 @@ export class PromptsController {
     }
 
     @Get()
-    async getPrompt(@Query('id') id: number){
-        const prompt =  await this.promptService.findOne(id)
-        if (!prompt){ 
-            throw new NotFoundException('Prompt not found')
-        } 
-        return prompt;
+    async getPrompt(@Query('') query: GetPromptsDto){
+        let prompt: PromptsEntity | PromptsEntity[];
+
+        if(query.id){
+            prompt =  await this.promptService.findOne(+query.id)
+        }
+
+        if(query.author){
+            prompt =  await this.promptService.findByAuthor(+query.author)
+        }
+
+        if(query.category){
+            prompt =  await this.promptService.findByCategory(query.category)
+        }
+
+        if(!prompt){
+            throw new NotFoundException('No prompts found')
+        }
+
+        return prompt
     }
 
     @Post()
@@ -32,24 +48,6 @@ export class PromptsController {
     @Serialize(PromptsDto)
     createPrompt(@Body() body: CreatePromptDto, @CurrentUser() user: UserEntity){
         return this.promptService.create(body, user)
-    }
-
-    @Get('/category/:category')
-    async listCategoryPrompts(@Param('category') category: string){
-        const prompt =  await this.promptService.findByCategory(category)
-        if (!prompt){ 
-            throw new NotFoundException('Prompt not found')
-        } 
-        return prompt;
-    }
-
-    @Get('/author/:id')
-    async getByAuthor(@Param('id') id: number){
-        const prompt =  await this.promptService.findByAuthor(id)
-        if (!prompt){ 
-            throw new NotFoundException('No prompts found')
-        } 
-        return prompt;
     }
 
     @Delete('/:id')

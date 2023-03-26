@@ -13,6 +13,7 @@ export class AuthService{
     async signup(email: string, password: string){
         // first check if email is already in DB
         const users = await this.usersService.find(email)
+        // this could be replaced by a custom validator!!!
         if(users.length){
             throw new BadRequestException('Email already in use')
         }

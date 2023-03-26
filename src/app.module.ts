@@ -52,7 +52,8 @@ const cookieSession = require('cookie-session');
 export class AppModule {
   // global scope middleware that will apply to each of our routes
   configure(consumer: MiddlewareConsumer){
-    consumer.apply(cookieSession({
+    consumer.apply(
+      cookieSession({
       keys: ['asdf']
     })).forRoutes('*');
   }

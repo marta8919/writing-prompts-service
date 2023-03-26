@@ -11,7 +11,7 @@ export class UsersService {
 
     create(email: string, password: string){
         const user = this.repo.create({email, password})
-        // user will be an instance of the UserEntity
+        // user will be an instance of the UserEntity 
         return this.repo.save(user);
     }
 
