@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -14,14 +17,15 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const prompts_module_1 = require("./prompts/prompts.module");
 const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("./users/user.entity");
-const prompts_entity_1 = require("./prompts/prompts.entity");
 const config_1 = require("@nestjs/config");
 const cookieSession = require('cookie-session');
 let AppModule = class AppModule {
+    constructor(configService) {
+        this.configService = configService;
+    }
     configure(consumer) {
         consumer.apply(cookieSession({
-            keys: ['asdf']
+            keys: [this.configService.get('COOKIE_KEY')]
         })).forRoutes('*');
     }
 };
@@ -32,17 +36,7 @@ AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: `.env.${process.env.NODE_ENV}`
             }),
-            typeorm_1.TypeOrmModule.forRootAsync({
-                inject: [config_1.ConfigService],
-                useFactory: (config) => {
-                    return {
-                        type: 'sqlite',
-                        database: config.get('DB_NAME'),
-                        synchronize: true,
-                        entities: [user_entity_1.UserEntity, prompts_entity_1.PromptsEntity]
-                    };
-                }
-            }),
+            typeorm_1.TypeOrmModule.forRoot(),
             users_module_1.UsersModule,
             prompts_module_1.PromptsModule
         ],
@@ -56,7 +50,8 @@ AppModule = __decorate([
                 })
             }
         ],
-    })
+    }),
+    __metadata("design:paramtypes", [config_1.ConfigService])
 ], AppModule);
 exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

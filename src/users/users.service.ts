@@ -18,7 +18,7 @@ export class UsersService {
     findOne(id: number){
         if(!id) throw new NotFoundException('No user logged in')
 
-        return this.repo.findOneBy({id: id})       
+        return this.repo.findOne({id: id})       
     }
 
     find(email: string){

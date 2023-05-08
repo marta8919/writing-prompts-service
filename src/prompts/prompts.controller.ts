@@ -16,7 +16,7 @@ export class PromptsController {
     constructor(private promptService: PromptsService){}
 
     @Get('/all')
-    findAll(){
+    findAll(){ 
         return this.promptService.findAll()
     }
 
