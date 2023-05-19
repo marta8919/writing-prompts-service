@@ -7,6 +7,6 @@ import { PromptsEntity } from './prompts.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([PromptsEntity])],
   controllers: [PromptsController],
-  providers: [PromptsService]
+  providers: [PromptsService],
 })
 export class PromptsModule {}

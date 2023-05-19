@@ -18,15 +18,18 @@ const users_module_1 = require("./users/users.module");
 const prompts_module_1 = require("./prompts/prompts.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
+const dbConfig = require('../ormconfig');
 const cookieSession = require('cookie-session');
 let AppModule = class AppModule {
     constructor(configService) {
         this.configService = configService;
     }
     configure(consumer) {
-        consumer.apply(cookieSession({
-            keys: [this.configService.get('COOKIE_KEY')]
-        })).forRoutes('*');
+        consumer
+            .apply(cookieSession({
+            keys: [this.configService.get('COOKIE_KEY')],
+        }))
+            .forRoutes('*');
     }
 };
 AppModule = __decorate([
@@ -34,11 +37,11 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: `.env.${process.env.NODE_ENV}`
+                envFilePath: `.env.${process.env.NODE_ENV}`,
             }),
-            typeorm_1.TypeOrmModule.forRoot(),
+            typeorm_1.TypeOrmModule.forRoot(dbConfig),
             users_module_1.UsersModule,
-            prompts_module_1.PromptsModule
+            prompts_module_1.PromptsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
@@ -47,8 +50,8 @@ AppModule = __decorate([
                 provide: core_1.APP_PIPE,
                 useValue: new common_1.ValidationPipe({
                     whitelist: true,
-                })
-            }
+                }),
+            },
         ],
     }),
     __metadata("design:paramtypes", [config_1.ConfigService])

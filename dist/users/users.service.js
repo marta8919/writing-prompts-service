@@ -29,7 +29,7 @@ let UsersService = class UsersService {
     findOne(id) {
         if (!id)
             throw new common_1.NotFoundException('No user logged in');
-        return this.repo.findOne({ id: id });
+        return this.repo.findOne({ where: { id: id } });
     }
     find(email) {
         return this.repo.find({ where: { email } });

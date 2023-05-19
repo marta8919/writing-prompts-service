@@ -1,8 +1,8 @@
-import { IsString } from 'class-validator'
+import { IsString } from 'class-validator';
 
 export class CreatePromptDto {
-    @IsString()
-    prompt: string;
-    @IsString()
-    category: string;
+  @IsString()
+  prompt: string;
+  @IsString()
+  category: string;
 }

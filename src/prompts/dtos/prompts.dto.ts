@@ -1,16 +1,13 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from 'class-transformer';
 
 export class PromptsDto {
-    @Expose()
-    id: string;
-    @Expose()
-    prompt: string;
-    @Expose()
-    category: string;
+  @Expose()
+  id: string;
+  @Expose()
+  prompt: string;
+  @Expose()
+  category: string;
 
-    @Transform(({obj})=> 
-    {console.log('object', obj), obj.user.id})
-    @Expose()
-    userId: number;
-
+  @Expose()
+  userId: number;
 }

@@ -12,15 +12,23 @@ describe('PromptsController', () => {
 
   beforeEach(async () => {
     mockPromptsService = {
-        findAll: ()=> Promise.resolve([{prompt: 'test', category: 'fantansy', id: 4} as PromptsEntity]),
-        findOne:(id: number)=> Promise.resolve({prompt: 'test', category: 'fantansy', id: 4, userId: 1} as unknown as PromptsEntity),
-        create: (promptdto: CreatePromptDto, user: UserEntity)=> Promise.resolve({} as PromptsEntity)
+      findAll: () =>
+        Promise.resolve([
+          { prompt: 'test', category: 'fantansy', id: 4 } as PromptsEntity,
+        ]),
+      findOne: (id: number) =>
+        Promise.resolve({
+          prompt: 'test',
+          category: 'fantansy',
+          id: 4,
+          userId: 1,
+        } as unknown as PromptsEntity),
+      create: (promptdto: CreatePromptDto, user: UserEntity) =>
+        Promise.resolve({} as PromptsEntity),
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PromptsController],
-      providers: [
-        { provide: PromptsService, useValue: mockPromptsService },
-      ],
+      providers: [{ provide: PromptsService, useValue: mockPromptsService }],
     }).compile();
 
     controller = module.get<PromptsController>(PromptsController);
@@ -30,10 +38,10 @@ describe('PromptsController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('find all returns an array', async()=>{
+  it('find all returns an array', async () => {
     const prompt = await controller.findAll();
     expect(prompt).toHaveLength(1);
-  })
+  });
 
   //ToDo, need to adjust these tests
   // it('find one prompt based on id returns one one result', async()=> {

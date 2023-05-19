@@ -18,7 +18,7 @@ PromptsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([prompts_entity_1.PromptsEntity])],
         controllers: [prompts_controller_1.PromptsController],
-        providers: [prompts_services_1.PromptsService]
+        providers: [prompts_services_1.PromptsService],
     })
 ], PromptsModule);
 exports.PromptsModule = PromptsModule;

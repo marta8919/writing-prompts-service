@@ -1,7 +1,7 @@
-import { PromptsEntity } from "./prompts.entity";
-import { Repository } from "typeorm";
-import { CreatePromptDto } from "./dtos/create-prompt.dto";
-import { UserEntity } from "src/users/user.entity";
+import { PromptsEntity } from './prompts.entity';
+import { Repository } from 'typeorm';
+import { CreatePromptDto } from './dtos/create-prompt.dto';
+import { UserEntity } from 'src/users/user.entity';
 export declare class PromptsService {
     private repo;
     constructor(repo: Repository<PromptsEntity>);

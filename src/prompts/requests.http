@@ -1,0 +1,26 @@
+### Create a new prompt
+POST http://localhost:3300/prompts
+content-type: application/json
+
+{
+    "prompt": "test prompt after pipe",
+    "category": "drama"
+}
+
+### Find all prompts
+GET http://localhost:3300/prompts/all
+
+
+### Get prompts depending on query
+GET http://localhost:3300/prompts?category=drama
+
+# ### Get a random query
+# GET http://localhost:3300/prompts/random
+
+# ### Delete a prompt based on id
+# DELETE http://localhost:3300/prompts/3
+
+# ### Update prompt
+# PACTH http://localhost:3300/prompts/7
+# Content-Type: application/json
+# {"prompt": "prompts updated"}

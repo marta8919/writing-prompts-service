@@ -9,13 +9,10 @@ import { CurrentUserMiddleware } from 'src/middlewares/current-user.middleware';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   controllers: [UsersController],
-  providers: [
-    UsersService, 
-    AuthService, 
-    ],
+  providers: [UsersService, AuthService],
 })
 export class UsersModule {
-  configure(consumer: MiddlewareConsumer){
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(CurrentUserMiddleware).forRoutes('*');
   }
 }

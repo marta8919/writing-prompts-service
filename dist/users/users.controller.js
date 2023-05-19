@@ -29,6 +29,7 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     async createUser(body, session) {
+        console.log('creating user', body);
         const user = await this.authService.signup(body.email, body.password);
         session.userId = user.id;
         return user;
@@ -124,7 +125,8 @@ __decorate([
 UsersController = __decorate([
     (0, common_1.Controller)('auth'),
     (0, serialize_interceptor_1.Serialize)(user_dto_1.UserDto),
-    __metadata("design:paramtypes", [users_service_1.UsersService, auth_service_1.AuthService])
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        auth_service_1.AuthService])
 ], UsersController);
 exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map

@@ -26,7 +26,6 @@ __decorate([
     __metadata("design:type", String)
 ], PromptsDto.prototype, "category", void 0);
 __decorate([
-    (0, class_transformer_1.Transform)(({ obj }) => { console.log('object', obj), obj.user.id; }),
     (0, class_transformer_1.Expose)(),
     __metadata("design:type", Number)
 ], PromptsDto.prototype, "userId", void 0);
