@@ -12,7 +12,8 @@ GET http://localhost:3300/prompts/all
 
 
 ### Get prompts depending on query
-GET http://localhost:3300/prompts?category=drama
+GET http://localhost:3300/prompts?id=2
+
 
 # ### Get a random query
 # GET http://localhost:3300/prompts/random

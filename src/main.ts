@@ -9,6 +9,6 @@ async function bootstrap() {
     res.removeHeader('date');
     next();
   });
-  await app.listen(3300);
+  await app.listen(process.env.PORT || '3000');
 }
 bootstrap();

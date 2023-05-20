@@ -1,7 +1,7 @@
 git
 node_modules
 
-# requests.http
+requests.http
 .env.development
 .env.test
 .vscodeqwqsan
